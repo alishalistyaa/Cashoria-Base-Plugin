@@ -3,6 +3,8 @@ package chart.plugin;
 import controller.*;
 import boundary.widget.*;
 import boundary.MainWindow;
+import util.PluginLoader;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,15 +44,18 @@ public class BasePlugin extends TabPanel implements BasePluginInterface{
 
     public void addURL(List<URL> urls){
         this.urls = urls;
+        System.out.println(urls.toString());
     }
 
     public void loadPlugin(MainWindow mainWindow){
         ClassLoader ucl = new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]));
-        ServiceLoader<ChartPluginInterface> chartPluginInterface = ServiceLoader.load(BasePluginInterface.class, ucl);
+        ServiceLoader<ChartPluginInterface> chartPluginInterface = ServiceLoader.load(ChartPluginInterface.class, ucl);
+        System.out.println("Test PLUGIN");
 
         for (final ChartPluginInterface g : chartPluginInterface) {
             JPanel chartPanel = g.loadPanel(mainWindow.getController());
             this.add(chartPanel);
+            System.out.println("Test PLUGIN KELOADDD");
         }
     }
 }
