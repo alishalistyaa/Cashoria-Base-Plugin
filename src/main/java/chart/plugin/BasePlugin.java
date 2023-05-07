@@ -6,8 +6,13 @@ import boundary.MainWindow;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.ServiceLoader;
 
 public class BasePlugin extends TabPanel implements BasePluginInterface{
+    List<URL> urls;
 
     public void addChartPanels(JPanel chart){
        this.add(chart);
@@ -33,11 +38,19 @@ public class BasePlugin extends TabPanel implements BasePluginInterface{
                     }
                 }
                         );
-        System.out.println("Test SetupMainwindow Akhir");
     }
-    @Override
-    public JPanel loadPanel(MainController mainController){
-        System.out.println("Test Load Panel");
-        return this;
+
+    public void addURL(List<URL> urls){
+        this.urls = urls;
+    }
+
+    public void pluginLoader(MainWindow mainWindow){
+        ClassLoader ucl = new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]));
+        ServiceLoader<ChartPluginInterface> chartPluginInterface = ServiceLoader.load(BasePluginInterface.class, ucl);
+
+        for (final ChartPluginInterface g : chartPluginInterface) {
+            JPanel chartPanel = g.loadPanel(mainWindow.getController());
+            this.add(chartPanel);
+        }
     }
 }
