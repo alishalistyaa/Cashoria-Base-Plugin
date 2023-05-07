@@ -44,7 +44,7 @@ public class BasePlugin extends TabPanel implements BasePluginInterface{
         this.urls = urls;
     }
 
-    public void pluginLoader(MainWindow mainWindow){
+    public void loadPlugin(MainWindow mainWindow){
         ClassLoader ucl = new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]));
         ServiceLoader<ChartPluginInterface> chartPluginInterface = ServiceLoader.load(BasePluginInterface.class, ucl);
 
